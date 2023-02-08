@@ -22,18 +22,6 @@
   </properties>
   <dependencies>
     <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-api</artifactId>
-      <version>${junit.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-engine</artifactId>
-      <version>${junit.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
         <groupId>org.apache.kafka</groupId>
         <artifactId>kafka-clients</artifactId>
         <version>2.0.0</version>
@@ -45,31 +33,23 @@
         <version>1.7.25</version>
         <!-- <scope>test</scope> -->
     </dependency>
-    <!-- <dependency>
-      <groupId>com.twitter</groupId>
-      <artifactId>hbc-core</artifactId>
-      <version>2.2.0</version>
-    </dependency> -->
     <dependency>
       <groupId>com.twitter</groupId>
       <artifactId>twitter-api-java-sdk</artifactId>
       <version>2.0.0</version>
     </dependency>
     <dependency>
-      <groupId>org.twitter4j</groupId>
-      <artifactId>twitter4j-core</artifactId>
-      <version>4.0.7</version>
-  </dependency>
-  <dependency>
-      <groupId>org.twitter4j</groupId>
-      <artifactId>twitter4j-stream</artifactId>
-      <version>4.0.7</version>
-        </dependency>
-    <!-- <dependency> 
-     <groupId>com.fasterml.jackson.core</groupId>
-      <artifactId>jackson-databind</artifactId>
-      <version>2.11.1</version>
-    </dependency> -->
+      <groupId>org.elasticsearch.client</groupId>
+      <artifactId>elasticsearch-rest-high-level-client</artifactId>
+      <version>6.4.0</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
+    <dependency>
+        <groupId>com.google.code.gson</groupId>
+        <artifactId>gson</artifactId>
+        <version>2.10.1</version>
+    </dependency>
+
   </dependencies>
   <build>
     <plugins>
