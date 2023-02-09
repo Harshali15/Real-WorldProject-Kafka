@@ -40,7 +40,7 @@ public class TwitterProducer {
         tweetFields.add("created_at");
         tweetFields.add("text");
     
-        String query = "kafka";
+        String query = "bitcoin";
 
         Get2TweetsSearchRecentResponse result = apiInstance.tweets().tweetsRecentSearch(query).tweetFields(tweetFields).execute();
 

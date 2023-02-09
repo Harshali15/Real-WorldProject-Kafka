@@ -22,6 +22,7 @@ public class TwitterApiExample {
         tweetFields.add("id");
         tweetFields.add("created_at");
     
+    
         String query = "bitcoin";
 
         Get2TweetsSearchRecentResponse result = apiInstance.tweets().tweetsRecentSearch(query).execute();

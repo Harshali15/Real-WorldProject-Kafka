@@ -5,6 +5,7 @@ import java.time.Duration;
 import java.util.Arrays;
 import java.util.Properties;
 
+import org.apache.commons.lang3.ObjectUtils.Null;
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -16,6 +17,8 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.serialization.StringDeserializer;
+import org.elasticsearch.action.bulk.BulkRequest;
+import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.client.RequestOptions;
@@ -29,7 +32,7 @@ import org.slf4j.LoggerFactory;
 import com.google.gson.JsonParser;
 
 
-public class ElasticSearchConsumer {
+public class ConsumerImproved {
     public static RestHighLevelClient createClient(){
 
         //I am using elasticsearch cluster from bonsaisearch.net. Create you cluster and then add these detaisl here
@@ -66,7 +69,7 @@ public class ElasticSearchConsumer {
         properties.setProperty(ConsumerConfig.GROUP_ID_CONFIG, groupId);
         properties.setProperty(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest"); //earliest/latest/none
         properties.setProperty(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "false");//disable auto commit
-        properties.setProperty(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, "5"); //poll a max of 10 records
+        properties.setProperty(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, "10"); //poll a max of 100 records
 
         //2. create consumer
         KafkaConsumer<String,String> consumer = new KafkaConsumer<String,String>(properties);
@@ -74,47 +77,52 @@ public class ElasticSearchConsumer {
         return consumer;
     }
     public static void main(String[] args) throws IOException {
-        Logger logger = LoggerFactory.getLogger(ElasticSearchConsumer.class.getName());
+        Logger logger = LoggerFactory.getLogger(ConsumerImproved.class.getName());
         RestHighLevelClient client = createClient();
 
         KafkaConsumer<String,String> consumer = createConsumer("twitter-tweets2");
         while(true){
             ConsumerRecords<String,String> records = consumer.poll(Duration.ofMillis(100));
-            logger.info("Received "+ records.count()+ " records");
+            
+            Integer record_count= records.count();
+
+            logger.info("Received "+ record_count+ " records");
+
+            BulkRequest bulkRequest = new BulkRequest();
+
             for(ConsumerRecord<String,String> record : records) {
-                //System.out.println(record.value());
 
                 //one way to provide id , kafka generic way
                 //String id = record.topic()+"_"+ record.partition()+"_"+record.offset();
 
                 //other way to provide id, twitter feed specifc id
-                String id1 = extractIdFromTweet(record.value());
-                
+                try{
+                    String id1 = extractIdFromTweet(record.value());
                 IndexRequest indexRequest = new IndexRequest(
                     "twitter",
                     "tweets",
                     id1   //this will make our consumer idempotent
                 ).source(record.value(),XContentType.JSON);
 
-                IndexResponse indexResponse = client.index(indexRequest,RequestOptions.DEFAULT);
-                    
+                bulkRequest.add(indexRequest);  //we add to out bulk request
+                }catch(NullPointerException e){
+                    logger.warn("Skipping bad data "+ record.value());
+                }
+                
+            }   
+            if(record_count>0){
+                BulkResponse bulkItemResponse = client.bulk(bulkRequest, RequestOptions.DEFAULT);
 
-                String id = indexResponse.getId();
-                logger.info(id);
+                logger.info("Commiting offsets now");
+                consumer.commitSync();
+                logger.info("Offsets commited");
                 try {
-                    Thread.sleep(1);
+                    Thread.sleep(1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-            }   
-            logger.info("Commiting offsets now");
-            consumer.commitSync();
-            logger.info("Offsets commited");
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
             }
+
         }
 
         //client.close();
