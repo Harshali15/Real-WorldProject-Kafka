@@ -5,7 +5,7 @@ import java.time.Duration;
 import java.util.Arrays;
 import java.util.Properties;
 
-import org.apache.commons.lang3.ObjectUtils.Null;
+//import org.apache.commons.lang3.ObjectUtils.Null;
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -18,10 +18,10 @@ import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.elasticsearch.action.bulk.BulkRequest;
-import org.elasticsearch.action.bulk.BulkResponse;
+//import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.action.index.IndexRequest;
-import org.elasticsearch.action.index.IndexResponse;
-import org.elasticsearch.client.RequestOptions;
+//import org.elasticsearch.action.index.IndexResponse;
+//import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestClientBuilder;
 import org.elasticsearch.client.RestHighLevelClient;
@@ -34,7 +34,7 @@ import com.google.gson.JsonParser;
 
 public class ConsumerImproved {
     public static RestHighLevelClient createClient(){
-
+        
         //I am using elasticsearch cluster from bonsaisearch.net. Create you cluster and then add these detaisl here
         String hostname = "hostname";
         String username = "username";
@@ -78,7 +78,7 @@ public class ConsumerImproved {
     }
     public static void main(String[] args) throws IOException {
         Logger logger = LoggerFactory.getLogger(ConsumerImproved.class.getName());
-        RestHighLevelClient client = createClient();
+        //RestHighLevelClient client = createClient();
 
         KafkaConsumer<String,String> consumer = createConsumer("twitter-tweets2");
         while(true){
@@ -111,7 +111,7 @@ public class ConsumerImproved {
                 
             }   
             if(record_count>0){
-                BulkResponse bulkItemResponse = client.bulk(bulkRequest, RequestOptions.DEFAULT);
+                // BulkResponse bulkItemResponse = client.bulk(bulkRequest, RequestOptions.DEFAULT);
 
                 logger.info("Commiting offsets now");
                 consumer.commitSync();
