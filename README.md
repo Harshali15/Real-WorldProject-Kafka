@@ -3,11 +3,6 @@
 
 This project is about creating a producer-consumer architecture using kafka to consume tweets from twitter in real time and sending them to elasticsearch. The project flow diagram is as below : 
 
-|-------------|      |--------------|      |---------------|      |--------------|
-| Twitter API |----\ | Kafka        |----\ | Kafka         |----\ |ElasticSearch |
-|             |----/ | Producer     |----/ | Consumer      |----/ |              |
-|-------------|      |--------------|      |---------------|      |--------------|
-
 https://github.com/Harshali15/Real-WorldProject-Kafka/blob/main/image.png
 
 I have worked step by step, first coding just the producer, then a consumer, and then added improvements to them for better throughput. In the end I have tried a simple hands-on implementations on kafka connect and kafka streams. 
