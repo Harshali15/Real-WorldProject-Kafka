@@ -12,7 +12,7 @@ I have worked step by step, first coding just the producer, then a consumer, and
  **This class impelements a basic code to fetch data from twitter api, fetches tweets based on a query.**
 
 2. TwitterProducer.java
-**This class creates a producer to send data fetched form twitter api to a topicin kafka**
+**This class creates a producer to send data fetched form twitter api to a topic in kafka**
 
 3. ElasticSearchConsumer.java
 **This class creates a consumer to consume the produced data from TwitterProducer.java and sends the data to elasticsearch cluster created using bonsai elasticsearch**
